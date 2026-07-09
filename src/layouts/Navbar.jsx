@@ -26,7 +26,7 @@ import {
   Logout,
   Settings,
 } from '@mui/icons-material';
-import { useTheme as useThemeContext } from '../contexts/ThemeContext';
+import { useThemeContext } from "../contexts/ThemeContext";
 import { useSidebar } from '../contexts/SidebarContext';
 
 const NAVBAR_HEIGHT = 64;
@@ -44,7 +44,7 @@ const breadcrumbs = {
 const Navbar = () => {
   const muiTheme = useTheme();
   const { mode, toggleTheme } = useThemeContext();
-  const { isOpen, toggle } = useSidebar();
+  const { toggle } = useSidebar();
   const location = useLocation();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -74,7 +74,7 @@ const Navbar = () => {
       position="fixed"
       sx={{
         height: NAVBAR_HEIGHT,
-        zIndex: (theme) => muiTheme.zIndex.drawer + 1,
+        zIndex: () => muiTheme.zIndex.drawer + 1,
         bgcolor: muiTheme.palette.mode === 'dark' ? '#1E1E1E' : '#FFFFFF',
         color: muiTheme.palette.text.primary,
         boxShadow: 'none',

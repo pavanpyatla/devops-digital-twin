@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { Box, Card, CardContent, Typography, IconButton, alpha } from '@mui/material';
-import { TrendingUp, TrendingDown, InfoOutlined } from '@mui/icons-material';
+import { Box, Card, CardContent, Typography, alpha } from '@mui/material';
+import { TrendingUp, TrendingDown } from '@mui/icons-material';
 
 const MetricCard = ({
   title,

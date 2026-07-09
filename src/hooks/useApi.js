@@ -19,8 +19,29 @@ export const useApi = (apiCall, initialData = null, dependencies = []) => {
   }, [apiCall]);
 
   useEffect(() => {
-    fetchData();
-  }, dependencies);
+    let isMounted = true;
+    
+    setLoading(true);
+    apiCall()
+      .then((response) => {
+        if (isMounted) {
+          setData(response.data);
+          setLoading(false);
+          setError(null);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setError(err.message || 'An error occurred');
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiCall, ...dependencies]);
 
   return { data, loading, error, refetch: fetchData };
 };

@@ -8,20 +8,9 @@ import {
   CardHeader,
   IconButton,
   Chip,
-  LinearProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   alpha,
   useTheme,
-  Tabs,
-  Tab,
   Tooltip,
-  Divider,
 } from '@mui/material';
 import {
   Dns,
@@ -29,34 +18,19 @@ import {
   Speed,
   NetworkCheck,
   Science,
-  TrendingUp,
   Warning,
   Payments,
   Refresh,
-  MoreVert,
-  Circle,
-  CheckCircle,
-  Error as ErrorIcon,
-  AccessTime,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from 'recharts';
 import MetricCard from '../../components/MetricCard';
 import StatusChip from '../../components/StatusChip';
 import AlertItem from '../../components/AlertItem';
 import { PageSkeleton } from '../../components/LoadingSkeleton';
 import { dashboardApi } from '../../services/api';
 import { formatCurrency, formatPercent, getRelativeTime, formatDuration } from '../../utils/formatters';
+import ResourceTrendsChart from './components/ResourceTrendsChart';
+import ServiceHealthWidget from './components/ServiceHealthWidget';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -112,8 +86,6 @@ const Dashboard = () => {
   }
 
   const chartDataMap = ['cpu', 'memory', 'network'];
-  const chartColors = ['#1976D2', '#9C27B0', '#2E7D32'];
-  const chartLabels = ['CPU Usage (%)', 'Memory Usage (%)', 'Network (Mbps)'];
   const currentChartData = metrics.trends[chartDataMap[chartTab]];
 
   return (
@@ -149,7 +121,7 @@ const Dashboard = () => {
             { title: 'Active Simulations', value: metrics.activeSimulations, icon: <Science />, color: 'info', trend: 'up', trendValue: '+2' },
             { title: 'Risk Score', value: metrics.riskScore, icon: <Warning />, color: metrics.riskScore > 70 ? 'error' : metrics.riskScore > 40 ? 'warning' : 'success', trend: 'down', trendValue: '-4pts' },
             { title: 'Monthly Cost', value: formatCurrency(metrics.monthlyCost), icon: <Payments />, color: 'warning', trend: 'up', trendValue: '+3.2%' },
-          ].map((metric, index) => (
+          ].map((metric) => (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={metric.title}>
               <motion.div variants={itemVariants}>
                 <MetricCard {...metric} />
@@ -162,138 +134,19 @@ const Dashboard = () => {
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {/* Trend Charts */}
           <Grid size={{ xs: 12, lg: 8 }}>
-            <motion.div variants={itemVariants}>
-              <Card sx={{ height: '100%' }}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6" fontWeight={600}>
-                      Resource Trends
-                    </Typography>
-                  }
-                  action={
-                    <Tabs
-                      value={chartTab}
-                      onChange={(_, v) => setChartTab(v)}
-                      sx={{
-                        '& .MuiTab-root': { minWidth: 'auto', px: 2, py: 1 },
-                        '& .MuiTabs-indicator': { height: 3 },
-                      }}
-                    >
-                      <Tab label="CPU" />
-                      <Tab label="Memory" />
-                      <Tab label="Network" />
-                    </Tabs>
-                  }
-                />
-                <CardContent sx={{ pt: 0 }}>
-                  <ResponsiveContainer width="100%" height={320}>
-                    <AreaChart data={currentChartData}>
-                      <defs>
-                        <linearGradient id={`chartGradient-${chartTab}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={chartColors[chartTab]} stopOpacity={0.3} />
-                          <stop offset="95%" stopColor={chartColors[chartTab]} stopOpacity={0.02} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke={alpha(theme.palette.text.secondary, 0.1)}
-                        vertical={false}
-                      />
-                      <XAxis
-                        dataKey="name"
-                        tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis
-                        tick={{ fontSize: 12, fill: theme.palette.text.secondary }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <RechartsTooltip
-                        contentStyle={{
-                          backgroundColor: theme.palette.background.paper,
-                          border: `1px solid ${theme.palette.divider}`,
-                          borderRadius: 8,
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                        }}
-                        labelStyle={{ color: theme.palette.text.primary, fontWeight: 600 }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        stroke={chartColors[chartTab]}
-                        strokeWidth={2.5}
-                        fill={`url(#chartGradient-${chartTab})`}
-                        name={chartLabels[chartTab]}
-                        dot={false}
-                        activeDot={{ r: 5, strokeWidth: 0 }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
+            <motion.div variants={itemVariants} style={{ height: '100%' }}>
+              <ResourceTrendsChart
+                chartTab={chartTab}
+                setChartTab={setChartTab}
+                currentChartData={currentChartData}
+              />
             </motion.div>
           </Grid>
 
           {/* Service Health */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <motion.div variants={itemVariants}>
-              <Card sx={{ height: '100%' }}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6" fontWeight={600}>
-                      Service Health
-                    </Typography>
-                  }
-                  action={
-                    <Chip
-                      label={healthStatus?.overall === 'healthy' ? 'All Systems Operational' : 'Issues Detected'}
-                      size="small"
-                      color={healthStatus?.overall === 'healthy' ? 'success' : 'warning'}
-                      sx={{ fontWeight: 600 }}
-                    />
-                  }
-                />
-                <CardContent sx={{ pt: 0 }}>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {healthStatus?.services.map((service) => {
-                      const statusColor =
-                        service.status === 'healthy' ? theme.palette.success.main
-                          : service.status === 'warning' ? theme.palette.warning.main
-                            : theme.palette.error.main;
-                      return (
-                        <Box key={service.name}>
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Circle sx={{ fontSize: 10, color: statusColor }} />
-                              <Typography variant="body2" fontWeight={500}>
-                                {service.name}
-                              </Typography>
-                            </Box>
-                            <Typography variant="caption" color="text.secondary">
-                              {service.uptime}% uptime
-                            </Typography>
-                          </Box>
-                          <LinearProgress
-                            variant="determinate"
-                            value={service.uptime}
-                            sx={{
-                              height: 6,
-                              borderRadius: 3,
-                              bgcolor: alpha(statusColor, 0.15),
-                              '& .MuiLinearProgress-bar': {
-                                bgcolor: statusColor,
-                                borderRadius: 3,
-                              },
-                            }}
-                          />
-                        </Box>
-                      );
-                    })}
-                  </Box>
-                </CardContent>
-              </Card>
+            <motion.div variants={itemVariants} style={{ height: '100%' }}>
+              <ServiceHealthWidget healthStatus={healthStatus} />
             </motion.div>
           </Grid>
         </Grid>

@@ -11,9 +11,6 @@ export const useThemeContext = () => {
   return context;
 };
 
-// Alias for components that import as useTheme
-export const useTheme = useThemeContext;
-
 export const ThemeProvider = ({ children }) => {
   const [mode, setMode] = useState(() => {
     const saved = localStorage.getItem('themeMode');

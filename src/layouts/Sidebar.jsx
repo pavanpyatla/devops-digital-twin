@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -12,7 +12,6 @@ import {
   Typography,
   Toolbar,
   Divider,
-  Collapse,
   useTheme,
   alpha,
 } from '@mui/material';
@@ -30,7 +29,7 @@ import {
   Help,
 } from '@mui/icons-material';
 import { useSidebar } from '../contexts/SidebarContext';
-import { ROUTES, SIDEBAR_ITEMS } from '../utils/constants';
+import { SIDEBAR_ITEMS } from '../utils/constants';
 
 const DRAWER_WIDTH = 280;
 const DRAWER_COLLAPSED_WIDTH = 72;
@@ -52,7 +51,6 @@ const Sidebar = () => {
   const { isOpen, toggle, setOpen } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(null);
 
   const drawerWidth = isOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH;
 

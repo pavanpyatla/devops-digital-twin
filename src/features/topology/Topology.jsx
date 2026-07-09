@@ -13,23 +13,22 @@ import {
   useTheme,
   LinearProgress,
   Divider,
-  Paper,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
 import {
-  AccountTree,
   Refresh,
-  Circle,
   Dns,
   Storage,
-  Cloud,
   Hub,
   Speed,
   Memory,
   Timer,
   GridView,
   ViewList,
+  NetworkCheck,
+  Api,
+  Circle,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { topologyApi } from '../../services/api';

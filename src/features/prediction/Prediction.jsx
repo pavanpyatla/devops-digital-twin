@@ -30,8 +30,6 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   XAxis,
@@ -39,7 +37,6 @@ import {
   CartesianGrid,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
-  Legend,
   ReferenceLine,
 } from 'recharts';
 
@@ -103,7 +100,6 @@ const Prediction = () => {
   const [autoScale, setAutoScale] = useState(true);
 
   const predictionDatasets = [cpuPrediction, memoryPrediction];
-  const predictionLabels = ['CPU Utilization', 'Memory Utilization'];
   const predictionColors = [theme.palette.primary.main, theme.palette.secondary.main];
 
   const currentData = predictionDatasets[predictionTab];

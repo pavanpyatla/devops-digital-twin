@@ -38,7 +38,7 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import StatusChip from '../../components/StatusChip';
-import { getRelativeTime, formatDuration, formatDateTime } from '../../utils/formatters';
+import { formatDuration, formatDateTime } from '../../utils/formatters';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -191,7 +191,7 @@ const History = () => {
 
         {/* Timeline */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {paginatedItems.map((item, index) => {
+          {paginatedItems.map((item) => {
             const config = typeConfig[item.type] || typeConfig.deployment;
             return (
               <motion.div
